@@ -1,1 +1,308 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>BANKOMATHS — Activité bancaire</title>
+<style>
+:root{
+  --navy:#072c61; --navy2:#0b4b91; --blue:#0d6efd;
+  --red:#f4083e; --red2:#d80035; --green:#00b968; --green2:#008c50;
+  --sky:#edf6ff; --line:#dce7f1; --soft:#f7faff; --ink:#102a43; --muted:#6a7f93;
+  --white:#fff; --gold:#ffca45; --shadow:0 16px 38px rgba(7,44,97,.12);
+}
+*{box-sizing:border-box}
+html{background:#fff}
+body{margin:0;min-height:100vh;background:#fff;color:var(--ink);
+font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+button,input{font:inherit} button{cursor:pointer}
+.shell{width:min(100%,480px);min-height:100vh;margin:auto;background:#fff;overflow:hidden;position:relative}
+.screen{display:none;min-height:100vh;background:#fff;animation:slide .28s ease}
+.screen.active{display:block}
+@keyframes slide{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:none}}
+.topbar{display:flex;align-items:center;gap:12px;padding:16px 18px 10px}
+.back,.round{width:38px;height:38px;border:0;background:#fff;border-radius:50%;display:grid;place-items:center;color:var(--navy);font-size:22px}
+.round{border:1px solid #d9e5ef;font-size:16px;font-weight:900}
+.pageTitle{flex:1;text-align:center;color:var(--navy);font-weight:900;font-size:17px}
+.brand{display:flex;align-items:center;gap:10px}
+.logoMark{width:58px;height:49px;position:relative;flex:0 0 auto}
+.logoMark .bar{position:absolute;left:7px;width:43px;height:13px;border-radius:4px 12px 4px 12px;transform:skewY(-13deg) rotate(-3deg)}
+.logoMark .b1{top:4px;background:linear-gradient(90deg,#ff294f,var(--red2))}
+.logoMark .b2{top:18px;background:linear-gradient(90deg,#f20a3e,#163a76)}
+.logoMark .b3{top:32px;background:linear-gradient(90deg,#163a76,#051f4d)}
+.brandName{font-size:22px;line-height:1;font-weight:950;letter-spacing:-1px;color:var(--navy)}
+.brandName span{color:var(--red)}
+.tag{font-size:8.5px;letter-spacing:1.9px;text-transform:uppercase;color:var(--navy);font-weight:850;margin-top:4px}
+.hero{
+margin-top:8px;
+height:360px;
+background-image:url("couple_cartons.png");
+background-position:center 28%;
+background-size:cover;
+background-repeat:no-repeat;
+position:relative;
+overflow:hidden
+}
+.hero:after{display:none}
+.wave{display:none}
+.welcomeBrand{padding:18px 20px 5px}
+.featurePanel{margin:0;padding:18px;background:#fff;border:0;border-radius:0;position:relative;z-index:4}
+.featureGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.featureBtn{border:0;background:transparent;padding:4px;text-align:center;color:var(--navy);font-size:10px;font-weight:750;line-height:1.3}
+.featureBtn .ico{width:42px;height:42px;margin:0 auto 7px;border-radius:13px;background:#eef5ff;display:grid;place-items:center;font-size:20px;color:var(--navy);transition:.2s}
+.featureBtn:active .ico{transform:scale(.94);background:#e0efff}
+.primary{width:100%;border:0;border-radius:14px;padding:15px 16px;background:linear-gradient(135deg,#ff1549,var(--red2));color:#fff;font-weight:900;font-size:15px;}
+.secondary{width:100%;border:1px solid #d0dce7;border-radius:14px;padding:13px 15px;background:#fff;color:var(--navy);font-weight:850}
+.smallNote{font-size:10px;color:#8292a2;text-align:center;margin-top:11px}
+.login{padding:8px 18px 26px}
+.loginHead{margin:17px 0;color:var(--navy);font-size:20px;font-weight:900}
+.field{position:relative;margin:12px 0}
+.field label{display:block;margin:0 0 6px 3px;font-size:11px;color:#60758a;font-weight:750}
+.field input{width:100%;padding:15px 46px 15px 44px;border:1px solid #cbd9e6;border-radius:13px;font-size:17px;color:var(--navy);outline:none}
+.field input:focus{border-color:#6f9dca;}
+.leftI{position:absolute;left:14px;bottom:14px;color:var(--navy);font-size:18px}
+.eye{position:absolute;right:12px;bottom:12px;width:34px;height:34px;border:0;background:transparent;color:var(--navy);font-size:17px}
+.loginOpts{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:7px 0 14px}
+.remember{font-size:11px;color:#4a6278;display:flex;gap:6px;align-items:center} .remember input{accent-color:var(--blue)}
+.textBtn{border:0;background:none;color:var(--navy);font-size:11px;font-weight:800;text-decoration:underline;padding:4px}
+.helpBox{display:flex;gap:11px;align-items:flex-start;margin-top:15px;background:#f7f9fc;padding:14px;border-radius:16px}
+.helpIcon{width:35px;height:35px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;background:#ffd96a;font-size:19px}
+.helpBox strong{font-size:13px;color:var(--navy)} .helpBox p{margin:4px 0 0;font-size:11.5px;color:#40617f;line-height:1.45}
+.progress{height:5px;background:#edf2f6} .progress span{display:block;height:100%;background:linear-gradient(90deg,var(--red),#ff5273)}
+.accountCard{margin:8px 18px 0;padding:17px;border:1px solid var(--line);border-radius:18px;}
+.accountLabel{font-size:13px;color:var(--navy);font-weight:850}
+.balance{font-size:35px;color:var(--navy);font-weight:950;letter-spacing:-1px;margin-top:5px}
+.iban{margin-top:10px;padding:9px 10px;border-radius:10px;background:#f2f7fb;font-size:10px;color:#6c8094}
+.quickGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 18px}
+.quickBtn{border:1px solid var(--line);background:#fff;border-radius:17px;padding:14px 8px;color:var(--navy);font-size:11px;font-weight:800;}
+.quickBtn span{display:block;font-size:21px;color:var(--blue);margin-bottom:5px}
+.bankMessage{display:flex;gap:10px;align-items:flex-start;margin:0 18px 14px;padding:14px;background:#eef6ff;border-radius:16px}
+.bankMessage button{border:0;background:transparent;text-align:left;padding:0;flex:1}
+.bankMessage strong{font-size:13px;color:var(--navy)} .bankMessage p{font-size:11.5px;color:#4d6881;margin:3px 0 0;line-height:1.4}
+.redDot{width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font-size:10px;font-weight:900}
+.decorCard{margin:0 18px 15px;min-height:104px;border-radius:18px;background:linear-gradient(135deg,#f5f9ff 0 60%,#e6f1fb 60%);position:relative;overflow:hidden}
+.decorCard:before{content:"";position:absolute;width:190px;height:190px;border-radius:50%;background:#d8ebfa;right:-58px;top:-90px}
+.decorCard:after{content:"";position:absolute;width:170px;height:170px;border-radius:50%;border:22px solid #fff;opacity:.8;right:20px;bottom:-138px}
+.alert{display:flex;gap:10px;margin:6px 18px 14px;padding:14px;border-radius:17px;background:#fff0f2;border:1px solid #ffd3dc;color:#8d1832}
+.alert .aico{font-size:24px} .alert strong{font-size:13px;color:var(--red2)} .alert p{margin:4px 0 0;font-size:11.5px;line-height:1.4}
+.opList{margin:0 18px} .op{display:flex;gap:10px;align-items:center;border-bottom:1px solid #edf2f6;padding:11px 0}
+.opI{width:32px;height:32px;border-radius:10px;background:#edf5ff;display:grid;place-items:center;color:var(--blue);font-size:18px}
+.opInfo{flex:1;min-width:0} .opName{font-size:13px;font-weight:850;color:var(--navy)} .opDate{font-size:10px;color:#8494a4;margin-top:2px}
+.value{font-size:13px;font-weight:950;white-space:nowrap} .minus{color:#ff003b} .plus{color:#00a85f}
+.calc{margin:15px 18px 26px;padding:16px;border-radius:18px;background:#fff5f6;border:1px solid #ffd7df}
+.calcTitle{font-size:13px;font-weight:900;color:var(--red2)}
+.answer{display:flex;margin-top:10px;border:1px solid #d7e2ec;border-radius:12px;overflow:hidden;background:#fff}
+.answer input{min-width:0;flex:1;border:0;outline:none;padding:14px;font-size:17px;color:var(--navy)} .currency{padding:0 13px;background:#f8fafc;display:grid;place-items:center;color:#697e91;font-weight:850}
+.error,.ok{display:none;margin-top:9px;padding:10px 12px;border-radius:11px;font-size:11.5px;font-weight:750}
+.error{background:#ffecef;color:#b21837} .ok{background:#e8faf2;color:#007e47}
+.cashHero{height:126px;margin:4px 18px 0;border-radius:18px;background:linear-gradient(135deg,#fff9dc,#fff);display:flex;align-items:center;justify-content:center;gap:7px;overflow:hidden}
+.coinStack{display:flex;align-items:flex-end;gap:5px}
+.stack{width:37px;position:relative}
+.coin{height:10px;border-radius:50%;background:linear-gradient(#ffd760,#e4a51d);border:1px solid #cf9110;margin-top:-2px;}
+.stack.s1{padding-bottom:0} .stack.s2{padding-bottom:8px} .stack.s3{padding-bottom:16px}
+.qcard{margin:14px 18px 0;padding:16px;border:1px solid var(--line);border-radius:18px;background:#fff;}
+.qcard h2{font-size:17px;color:var(--navy);margin:0 0 12px;text-align:center}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:10px} .choice button{padding:13px;border-radius:12px;border:1px solid #d4e0ea;background:#f7f9fc;color:#586d81;font-weight:850}
+.choice .selected{background:var(--green);border-color:var(--green);color:#fff}
+.tip{margin:14px 18px 0;padding:13px 14px;border-radius:14px;background:#eef6ff;color:#315b7f;font-size:11.5px;line-height:1.45}
+.recap{margin:8px 18px;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.rrow{display:flex;justify-content:space-between;gap:15px;padding:14px;border-bottom:1px solid #edf2f6;font-size:12px} .rrow:last-child{border-bottom:0} .rrow strong{font-size:13px}
+.successTop{text-align:center;padding:18px 18px 6px} .check{width:74px;height:74px;border-radius:50%;margin:12px auto;background:linear-gradient(145deg,#26cf82,#00a95f);color:white;display:grid;place-items:center;font-size:42px;}
+.successTop h1{margin:0;color:var(--navy);font-size:32px}
+.result{margin:10px 18px;padding:20px;border-radius:18px;background:linear-gradient(180deg,#eafff5,#dcf8eb);border:1px solid #c7efdd;text-align:center}
+.result h2{font-size:18px;color:#007a45;margin:0} .resultAmt{font-size:42px;font-weight:950;color:#008e50;margin:8px 0} .result p{font-size:12px;color:#3a5d4c;line-height:1.45}
+.future{margin:10px 18px;padding:18px;border-radius:20px;background:linear-gradient(135deg,#f5efff,#fff);border:1px solid #ded1ff;}
+.futureTitle{font-size:15px;font-weight:900;color:var(--navy)} .futureAmt{font-size:29px;font-weight:950;color:var(--green);letter-spacing:1px;margin:14px 0;padding:14px;background:#fff;border-radius:14px}
+.future p{font-size:12px;color:#4c637d;line-height:1.45}
+.bintedCard{margin:14px 0 0;border-radius:16px;overflow:hidden;background:#fff;border:1px solid #d9e4ed;display:block;min-height:132px}
+.bintedImg{background:#fff;display:flex;align-items:center;justify-content:center;padding:8px;min-height:150px}
+.bintedCopy{padding:13px} .bintedLogo{font-size:28px;font-weight:950;font-style:italic;color:#006e7f;letter-spacing:-2px} .bintedCopy p{font-size:11.5px;margin:6px 0 0;color:#49677a}
+.modal{position:fixed;inset:0;background:rgba(4,25,50,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:500}
+.modal.show{display:flex} .modalBox{width:min(100%,420px);background:#fff;border-radius:22px;padding:20px;}
+.modalI{width:46px;height:46px;border-radius:14px;background:#eef6ff;display:grid;place-items:center;font-size:22px;margin-bottom:12px}
+.modalBox h3{margin:0 0 8px;font-size:20px;color:var(--navy)} .modalBox p{margin:0;color:#506a81;font-size:13px;line-height:1.5}
+.teacherBadge{display:none}
+.teacherNote{display:none}
+</style>
+</head>
+<body>
+<div class="shell">
+<div class="teacherBadge" id="teacherBadge">CORRECTION ENSEIGNANTE</div>
 
+<section id="welcome" class="screen active">
+  <div class="welcomeBrand"><div class="brand">
+    <div class="logoMark"><span class="bar b1"></span><span class="bar b2"></span><span class="bar b3"></span></div>
+    <div><div class="brandName">BANKO<span>MATHS</span></div><div class="tag">Prérequis pour les statistiques</div></div>
+  </div></div>
+  <div class="hero"></div>
+  <div class="featurePanel">
+    <div class="featureGrid">
+      <button class="featureBtn" onclick="openModal('security')"><span class="ico">🛡</span>Sécurité</button>
+      <button class="featureBtn" onclick="openModal('tracking')"><span class="ico">▥</span>Suivi du compte</button>
+      <button class="featureBtn" onclick="openModal('documents')"><span class="ico">▤</span>Documents</button>
+      <button class="featureBtn" onclick="openModal('pedago')"><span class="ico">✓</span>Application pédagogique</button>
+    </div>
+    <button class="primary" style="margin-top:16px" onclick="go('login')">Se connecter →</button>
+    <div class="smallNote">Application fictive créée pour cette activité</div>
+  </div>
+  
+</section>
+
+<section id="login" class="screen">
+  <div class="topbar"><button class="back" onclick="go('welcome')">‹</button><div></div><button class="round" onclick="openModal('loginHelp')">?</button></div>
+  <div class="login">
+    <div class="brand"><div class="logoMark"><span class="bar b1"></span><span class="bar b2"></span><span class="bar b3"></span></div>
+      <div><div class="brandName">BANKO<span>MATHS</span></div><div class="tag">Prérequis pour les statistiques</div></div></div>
+    <div class="loginHead">Connexion à votre espace</div>
+    <div class="field"><label>Identifiant</label><span class="leftI">♙</span><input id="member" inputmode="numeric" placeholder="Votre identifiant"></div>
+    <div class="field"><label>Code d’accès</label><span class="leftI">🔑</span><input id="pin" type="password" inputmode="numeric" maxlength="5" placeholder="•••••"><button class="eye" onclick="togglePin()" aria-label="Afficher ou masquer le code">👁</button></div>
+    <div class="loginOpts"><label class="remember"><input type="checkbox"> Se souvenir de mon identifiant</label><button class="textBtn" onclick="openModal('loginHelp')">Identifiants oubliés ?</button></div>
+    <button class="primary" id="loginBtn">Se connecter →</button>
+    <div id="loginError" class="error">Identifiant ou code d’accès incorrect.</div>
+    <button class="helpBox" onclick="openModal('loginHelp')" style="width:100%;border:0;text-align:left">
+      <div class="helpIcon">💡</div><div><strong>Besoin d’aide ?</strong><p>Utilisez les documents remis par BANKOMATHS pour retrouver vos accès.</p></div>
+    </button>
+  </div>
+  
+</section>
+
+<section id="dashboard" class="screen">
+  <div class="progress"><span style="width:24%"></span></div>
+  <div class="topbar"><button class="back" style="visibility:hidden">‹</button><div class="pageTitle" style="text-align:left">Bonjour ! 👋</div><button class="round" onclick="openModal('accountSecurity')">i</button></div>
+  <button class="accountCard" onclick="openModal('balanceInfo')" style="width:calc(100% - 36px);text-align:left;background:#fff">
+    <div class="accountLabel">Solde de votre compte</div><div class="balance">1 116,05 €</div><div class="iban">Compte courant •••• 2048</div>
+  </button>
+  <div class="quickGrid">
+    <button class="quickBtn" onclick="openModal('operationsInfo')"><span>☷</span>Mes opérations</button>
+    <button class="quickBtn" onclick="openModal('cardsInfo')"><span>▤</span>Mes cartes</button>
+    <button class="quickBtn" onclick="openModal('documents')"><span>▧</span>Mes documents</button>
+  </div>
+  <div class="bankMessage"><div class="helpIcon" style="background:#dcecff;color:#1161bd">i</div><button onclick="showIncident()"><strong>Message de la banque</strong><p>Une information importante concerne vos opérations à venir.</p></button><div class="redDot">1</div></div>
+<div style="padding:6px 18px 28px"><button class="primary" onclick="showIncident()">Consulter les prélèvements à venir →</button></div>
+</section>
+
+<section id="operations" class="screen">
+  <div class="progress"><span style="width:48%"></span></div>
+  <div class="topbar"><button class="back" onclick="go('dashboard')">‹</button><div class="pageTitle">Prélèvements à venir</div><button class="round" onclick="openModal('signs')">?</button></div>
+  <button class="alert" onclick="openModal('incident')" style="width:calc(100% - 36px);text-align:left;border-color:#ffd3dc">
+    <div class="aico">🛠</div><div><strong>Information importante</strong><p>Le total n’a pas pu être calculé automatiquement. Vous devez le déterminer manuellement.</p></div>
+  </button>
+  <div class="opList">
+    <div class="op"><div class="opI">⌂</div><div class="opInfo"><div class="opName">Loyer</div><div class="opDate">Prélèvement programmé</div></div><div class="value minus">− 550,00 €</div></div>
+    <div class="op"><div class="opI">💧</div><div class="opInfo"><div class="opName">Eau de France</div><div class="opDate">Prélèvement programmé</div></div><div class="value minus">− 28,00 €</div></div>
+    <div class="op"><div class="opI">ϟ</div><div class="opInfo"><div class="opName">Électricité / Gaz</div><div class="opDate">Prélèvement programmé</div></div><div class="value minus">− 35,00 €</div></div>
+    <div class="op"><div class="opI">🛡</div><div class="opInfo"><div class="opName">Assurances</div><div class="opDate">Prélèvement programmé</div></div><div class="value minus">− 82,25 €</div></div>
+    <div class="op"><div class="opI">▣</div><div class="opInfo"><div class="opName">Eduflix</div><div class="opDate">Abonnement</div></div><div class="value minus">− 8,00 €</div></div>
+    <div class="op"><div class="opI">🛒</div><div class="opInfo"><div class="opName">Migrazon</div><div class="opDate">Abonnement</div></div><div class="value minus">− 6,99 €</div></div>
+    <div class="op"><div class="opI">🏋</div><div class="opInfo"><div class="opName">Fitness Club</div><div class="opDate">Abonnement</div></div><div class="value minus">− 19,90 €</div></div>
+    <div class="op"><div class="opI">🚙</div><div class="opInfo"><div class="opName">90Prêt Voiture</div><div class="opDate">Échéance de prêt</div></div><div class="value minus">− 306,70 €</div></div>
+    <div class="op"><div class="opI">🐖</div><div class="opInfo"><div class="opName">Épargne</div><div class="opDate">Virement programmé</div></div><div class="value minus">− 150,00 €</div></div>
+  </div>
+  <div class="calc"><div class="calcTitle">Total des prélèvements à venir</div>
+    <div class="answer"><input id="debitsAmount" inputmode="decimal" placeholder="0,00"><div class="currency">€</div></div>
+    <div class="teacherNote" id="teacherDebits"></div>
+    <div id="debitsError" class="error">Le montant n’est pas correct. Vérifiez votre calcul et les signes.</div><div id="debitsOk" class="ok">✓ Montant correct.</div>
+    <button class="primary" id="validateDebits" style="margin-top:12px">Valider le montant</button>
+  </div>
+</section>
+
+<section id="cash" class="screen">
+  <div class="progress"><span style="width:66%"></span></div>
+  <div class="topbar"><button class="back" onclick="go('operations')">‹</button><div class="pageTitle">Argent en espèces</div><button class="round" onclick="openModal('cashHelp')">?</button></div>
+  <button class="cashHero" onclick="openModal('cashHelp')" style="width:calc(100% - 36px);border:0">
+    <div class="coinStack">
+      <div class="stack s1"><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div></div>
+      <div class="stack s2"><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div></div>
+      <div class="stack s3"><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div><div class="coin"></div></div>
+    </div>
+  </button>
+  <div class="qcard"><h2>Possédez-vous de l’argent en espèces ?</h2><div class="choice"><button id="yesCash">✓ Oui</button><button id="noCash">○ Non</button></div></div>
+  <div class="qcard" id="cashInputBox" style="display:none"><h2 style="text-align:left;font-size:15px">Veuillez saisir la valeur de vos espèces</h2>
+    <div class="answer"><input id="cashAmount" inputmode="decimal" placeholder="0,00"><div class="currency">€</div></div>
+    <div class="teacherNote" id="teacherCash"></div>
+    <div id="cashError" class="error">Le montant n’est pas correct. Reprenez votre comptage.</div><div id="cashOk" class="ok">✓ Montant correct.</div>
+    <button class="primary" id="validateCash" style="margin-top:12px">Valider</button>
+  </div>
+  <button class="tip" onclick="openModal('cashHelp')" style="width:calc(100% - 36px);border:0;text-align:left">💡 Pensez à compter toutes vos pièces et tous vos billets.</button>
+</section>
+
+<section id="recap" class="screen">
+  <div class="progress"><span style="width:84%"></span></div>
+  <div class="topbar"><button class="back" onclick="go('cash')">‹</button><div class="pageTitle">Récapitulatif</div><button class="round" onclick="openModal('signs')">?</button></div>
+  <div class="recap">
+    <div class="rrow"><span>Montant présent sur le compte</span><strong>1 116,05 €</strong></div>
+    <div class="rrow"><span>Total des prélèvements à venir</span><strong class="minus">− 1 186,84 €</strong></div>
+    <div class="rrow"><span>Argent en espèces</span><strong class="plus">+ 152,20 €</strong></div>
+  </div>
+  <div class="calc"><div class="calcTitle" style="color:var(--navy)">Quel est le montant total qu’il vous reste ?</div>
+    <div class="answer"><input id="finalAmount" inputmode="decimal" placeholder="0,00"><div class="currency">€</div></div>
+    <div class="teacherNote" id="teacherFinal"></div>
+    <div id="finalError" class="error">Le montant n’est pas correct. Vérifiez les trois valeurs.</div>
+    <button class="primary" id="validateFinal" style="margin-top:12px">Valider mon résultat</button>
+  </div>
+  <button class="tip" onclick="openModal('signs')" style="width:calc(100% - 36px);border:0;text-align:left"><strong>Attention aux signes :</strong><br>− = somme retirée &nbsp;&nbsp; + = somme reçue</button>
+</section>
+
+<section id="result" class="screen">
+  <div class="progress"><span style="width:100%"></span></div>
+  <div class="topbar"><button class="back" onclick="go('recap')">‹</button><div class="pageTitle">Résultat</div><div style="width:38px"></div></div>
+  <div class="successTop"><div class="check">✓</div><h1>Bravo !</h1></div>
+  <div class="result"><h2>Votre calcul est correct</h2><div class="resultAmt">81,41 €</div><p>Votre budget disponible a été mis à jour.</p></div>
+  <div class="teacherNote" id="teacherResult"></div>
+  <div style="padding:12px 18px 24px"><button class="primary" onclick="go('future')">Voir les prochains mouvements →</button></div>
+  
+</section>
+
+<section id="future" class="screen">
+  <div class="topbar"><button class="back" onclick="go('result')">‹</button><div class="pageTitle">Mouvements à venir</div><div style="width:38px"></div></div>
+  <div class="future">
+    <div class="futureTitle">Virement Binted</div>
+    <div class="futureAmt">+ ####,## €</div>
+    <p>Une erreur est survenue lors de l’affichage du montant. Le virement est bien enregistré, mais son montant ne peut pas être visualisé pour le moment.</p>
+    <div class="bintedCard" style="border:0;background:#fff;margin-top:14px">
+          <div class="bintedImg" style="padding:0;min-height:0;background:#fff">
+            <img src="binted_teaser.png" alt="Binted" style="width:100%;height:auto;display:block;border-radius:14px">
+          </div>
+        </div>
+  </div>
+  <div style="padding:4px 18px 24px"><button class="secondary" onclick="resetAll()">Terminer l’activité</button></div>
+  
+</section>
+
+</div>
+
+<div id="modal" class="modal"><div class="modalBox"><div class="modalI" id="modalI">i</div><h3 id="modalTitle"></h3><p id="modalText"></p><button class="primary" onclick="closeModal()" style="margin-top:16px">J’ai compris</button></div></div>
+
+<script>
+const VALID_ID="43818379", VALID_PIN="34685";
+const modalData={
+security:{i:"🛡",t:"Sécurité",x:"BANKOMATHS est une application fictive. Même dans cette activité, retenez une règle réelle : un identifiant et un mot de passe sont personnels et ne doivent jamais être communiqués à un camarade ou à un tiers."},
+tracking:{i:"▥",t:"Suivi du compte",x:"Le solde et les opérations permettent de savoir ce qui entre et ce qui sort du compte. Vérifiez toujours les montants et les signes avant de valider un calcul."},
+documents:{i:"▤",t:"Documents bancaires",x:"Une lettre bancaire, un relevé ou un document contenant des références personnelles doit rester privé. Ne le photographiez pas pour le publier et ne le partagez pas sur un réseau social ou une messagerie de groupe."},
+pedago:{i:"✓",t:"Simulation pédagogique",x:"Cette interface imite une application bancaire pour travailler les mathématiques et les bons réflexes numériques. N’utilisez aucun véritable identifiant bancaire dans cette activité."},
+loginHelp:{i:"💡",t:"Retrouver vos accès",x:"Consultez la lettre envoyée par BANKOMATHS pour retrouver l’identifiant. Utilisez ensuite la carte-clé et les symboles fournis pour déterminer le code d’accès."},
+accountSecurity:{i:"🔐",t:"Bon réflexe",x:"Sur une vraie application bancaire, fermez votre session lorsque vous avez terminé et ne laissez pas un autre utilisateur accéder à votre téléphone déverrouillé."},
+balanceInfo:{i:"€",t:"Solde du compte",x:"Le solde indique l’argent actuellement présent sur le compte. Il ne tient pas forcément compte de toutes les opérations qui seront prélevées plus tard."},
+operationsInfo:{i:"☷",t:"Opérations",x:"Une opération peut être un prélèvement, un paiement ou un virement. Ici, vous allez surtout examiner les prélèvements programmés."},
+cardsInfo:{i:"▤",t:"Carte bancaire",x:"Les données d’une carte bancaire sont confidentielles. Ne communiquez jamais le numéro complet, la date d’expiration et le cryptogramme."},
+incident:{i:"🛠",t:"Information importante",x:"Un problème technique empêche BANKOMATHS de calculer automatiquement le total des prélèvements à venir. Vous devez effectuer ce calcul manuellement."},
+signs:{i:"±",t:"Attention aux signes",x:"Le signe − correspond à une somme retirée du compte. Le signe + correspond à une somme ajoutée au compte. Les signes vous aident à comprendre le sens de chaque opération."},cashHelp:{i:"🪙",t:"Espèces",x:"Les espèces correspondent aux billets et aux pièces que vous possédez physiquement. Utilisez le total obtenu lors du comptage de votre enveloppe."}
+};
+let modalKey="";
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+function openModal(k){modalKey=k;const d=modalData[k];document.getElementById('modalI').textContent=d.i;document.getElementById('modalTitle').textContent=d.t;document.getElementById('modalText').textContent=d.x;document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show');if(modalKey==='incident'&&document.getElementById('dashboard').classList.contains('active'))go('operations')}
+function showIncident(){openModal('incident')}
+function togglePin(){const p=document.getElementById('pin');p.type=p.type==='password'?'text':'password'}
+function euro(id){return Number(document.getElementById(id).value.trim().replace(/\s/g,'').replace(',','.'))}
+function near(a,b){return Number.isFinite(a)&&Math.abs(a-b)<.005}
+document.getElementById('loginBtn').onclick=()=>{const good=document.getElementById('member').value.trim()==VALID_ID&&document.getElementById('pin').value.trim()==VALID_PIN;document.getElementById('loginError').style.display=good?'none':'block';if(good)go('dashboard')};
+document.getElementById('validateDebits').onclick=()=>{const good=near(euro('debitsAmount'),1186.84);document.getElementById('debitsError').style.display=good?'none':'block';document.getElementById('debitsOk').style.display=good?'block':'none';if(good)setTimeout(()=>go('cash'),500)};
+document.getElementById('yesCash').onclick=()=>{document.getElementById('yesCash').classList.add('selected');document.getElementById('noCash').classList.remove('selected');document.getElementById('cashInputBox').style.display='block';setTimeout(()=>document.getElementById('cashInputBox').scrollIntoView({behavior:'smooth',block:'center'}),80)};
+document.getElementById('noCash').onclick=()=>{document.getElementById('noCash').classList.add('selected');document.getElementById('yesCash').classList.remove('selected');document.getElementById('cashInputBox').style.display='none';openModal('cashHelp')};
+document.getElementById('validateCash').onclick=()=>{const good=near(euro('cashAmount'),152.20);document.getElementById('cashError').style.display=good?'none':'block';document.getElementById('cashOk').style.display=good?'block':'none';if(good)setTimeout(()=>go('recap'),500)};
+document.getElementById('validateFinal').onclick=()=>{const good=near(euro('finalAmount'),81.41);document.getElementById('finalError').style.display=good?'none':'block';if(good)go('result')};
+function resetAll(){['member','pin','debitsAmount','cashAmount','finalAmount'].forEach(id=>document.getElementById(id).value='');['loginError','debitsError','debitsOk','cashError','cashOk','finalError'].forEach(id=>document.getElementById(id).style.display='none');document.getElementById('cashInputBox').style.display='none';go('welcome')}
+</script>
+</body></html>
